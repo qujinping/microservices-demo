@@ -2,14 +2,14 @@ version: '2'
 
 services:
   front-end:
-    image: weaveworksdemos/front-end
+    image: app/front-end
     hostname: front-end
     restart: always
     cap_drop:
       - all
     read_only: true
   edge-router:
-    image: weaveworksdemos/edge-router
+    image: app/edge-router
     ports:
       - '80:80'
       - '8080:8080'
@@ -27,7 +27,7 @@ services:
     hostname: edge-router
     restart: always
   catalogue:
-    image: weaveworksdemos/catalogue
+    image: app/catalogue
     hostname: catalogue
     restart: always
     cap_drop:
@@ -38,7 +38,7 @@ services:
     environment:
       - ZIPKIN=http://zipkin:9411/api/v1/spans
   catalogue-db:
-    image: weaveworksdemos/catalogue-db
+    image: app/catalogue-db
     hostname: catalogue-db
     restart: always
     environment:
@@ -46,7 +46,7 @@ services:
       - MYSQL_ALLOW_EMPTY_PASSWORD=true
       - MYSQL_DATABASE=socksdb
   cart:
-    image: weaveworksdemos/cart
+    image: app/cart
     hostname: cart
     restart: always
     cap_drop:
@@ -70,7 +70,7 @@ services:
     tmpfs:
       - /tmp:rw,noexec,nosuid
   orders:
-    image: weaveworksdemos/orders
+    image: app/orders
     hostname: orders
     restart: always
     cap_drop:
@@ -94,7 +94,7 @@ services:
     tmpfs:
       - /tmp:rw,noexec,nosuid
   shipping:
-    image: weaveworksdemos/shipping
+    image: app/shipping
     hostname: shipping
     restart: always
     cap_drop:
@@ -105,7 +105,7 @@ services:
     tmpfs:
       - /tmp:rw,noexec,nosuid
   queue-master:
-    image: weaveworksdemos/queue-master
+    image: app/queue-master
     hostname: queue-master
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -130,7 +130,7 @@ services:
       - DAC_OVERRIDE
     read_only: true
   payment:
-    image: weaveworksdemos/payment
+    image: app/payment
     hostname: payment
     restart: always
     cap_drop:
@@ -141,7 +141,7 @@ services:
     environment:
       - ZIPKIN=http://zipkin:9411/api/v1/spans
   user:
-    image: weaveworksdemos/user
+    image: app/user
     hostname: user
     restart: always
     cap_drop:
@@ -153,7 +153,7 @@ services:
       - MONGO_HOST=user-db:27017
       - ZIPKIN=http://zipkin:9411/api/v1/spans
   user-db:
-    image: weaveworksdemos/user-db
+    image: app/user-db
     hostname: user-db
     restart: always
     cap_drop:
@@ -181,7 +181,7 @@ services:
     ports:
       - "9411:9411"
   user-sim:
-    image: weaveworksdemos/load-test
+    image: app/load-test
     cap_drop:
       - all
     read_only: true
