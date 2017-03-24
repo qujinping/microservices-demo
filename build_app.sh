@@ -25,7 +25,7 @@ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v `pwd`:/opt/work/
 popd
 
 pushd ./app/carts
-docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v `pwd`:/opt/work/:z core/builder-did-centos7 s2i build -c . -e MAVEN_MIRROR_URL=http://192.168.32.1:9009/nexus/content/groups/public/ mid/builder-openjdk-18-centos7 --runtime-image core/runtime-openjdk-18-centos7 app/carts
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v `pwd`:/opt/work/:z core/builder-did-centos7 s2i build -c . -e MAVEN_MIRROR_URL=http://192.168.32.1:9009/nexus/content/groups/public/ mid/builder-openjdk-18-centos7 --runtime-image core/runtime-openjdk-18-centos7 app/cart
 popd
 
 pushd ./app/front-end
