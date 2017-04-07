@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  creationTimestamp: null
+  labels:
+    service: user-sim
+  name: user-sim
+spec:
+  replicas: 1
+  selector:
+    service: user-sim
+  strategy:
+    resources: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        service: user-sim
+    spec:
+      containers:
+      - args:
+        - -d
+        - "60"
+        - -r
+        - "200"
+        - -c
+        - "2"
+        - -h
+        - edge-router
+        image: ' '
+        name: user-sim
+        resources: {}
+      restartPolicy: Always
+  test: false
+  triggers:
+  - type: ConfigChange
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - user-sim
+      from:
+        kind: ImageStreamTag
+        name: user-sim:latest
+    type: ImageChange
+status: {}
