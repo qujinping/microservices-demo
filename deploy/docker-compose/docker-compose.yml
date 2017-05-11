@@ -2,21 +2,21 @@ version: '2'
 
 services:
   front-end:
-    image: app/front-end
+    image: docker-registry.default.svc:5000/sock/front-end
   edge-router:
-    image: app/edge-router
+    image: docker-registry.default.svc:5000/sock/edge-router
     ports:
-      - '80:80'
       - '8080:8080'
+      - '8081:8081'
     tmpfs:
       - /var/run
   catalogue:
-    image: app/catalogue
+    image: docker-registry.default.svc:5000/sock/catalogue
     command: scripts/run -port=8080 -images=./data/
     environment:
       - ZIPKIN=http://zipkin:9411/api/v1/spans
   catalogue-db:
-    image: app/catalogue-db
+    image: docker-registry.default.svc:5000/sock/catalogue-db
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_ALLOW_EMPTY_PASSWORD=true
@@ -24,52 +24,60 @@ services:
     volumes:
       - /var/lib/mysql
   cart:
-    image: app/cart
+    image: docker-registry.default.svc:5000/sock/cart
+    mem_limit: 512M
     environment:
       - APP_OPTIONS=--port=8080
+      - JAVA_APP_JAR=carts.jar
     tmpfs:
       - /tmp
   cart-db:
-    image: mongo
+    image: docker-registry.default.svc:5000/sock/mongo:3
     tmpfs:
       - /tmp
     volumes:
       - /data/configdb
       - /data/db
   orders:
-    image: app/orders
+    image: docker-registry.default.svc:5000/sock/orders
+    mem_limit: 512M
     environment:
       - APP_OPTIONS=--port=8080
+      - JAVA_APP_JAR=orders.jar
     tmpfs:
       - /tmp
   orders-db:
-    image: mongo
+    image: docker-registry.default.svc:5000/sock/mongo:3
     tmpfs:
       - /tmp
     volumes:
       - /data/configdb
       - /data/db
   shipping:
-    image: app/shipping
+    image: docker-registry.default.svc:5000/sock/shipping
+    mem_limit: 512M
     environment:
       - APP_OPTIONS=--port=8080
+      - JAVA_APP_JAR=shipping.jar
     tmpfs:
       - /tmp
   queue-master:
-    image: app/queue-master
+    image: docker-registry.default.svc:5000/sock/queue-master
+    mem_limit: 512M
     environment:
       - APP_OPTIONS=--port=8080
+      - JAVA_APP_JAR=queue-master.jar
     tmpfs:
       - /tmp
   rabbitmq:
-    image: rabbitmq:3
+    image: docker-registry.default.svc:5000/sock/rabbitmq:3
   payment:
-    image: app/payment
+    image: docker-registry.default.svc:5000/sock/payment
     command: scripts/run -port=8080
     environment:
       - ZIPKIN=http://zipkin:9411/api/v1/spans
   user:
-    image: app/user
+    image: docker-registry.default.svc:5000/sock/user
     command: scripts/run -port=8080
     environment:
       - HATEAOS=user:8080
@@ -77,7 +85,7 @@ services:
       - MONGO_HOST=user-db:27017
       - ZIPKIN=http://zipkin:9411/api/v1/spans
   user-db:
-    image: app/user-db
+    image: docker-registry.default.svc:5000/sock/user-db
     tmpfs:
       - /tmp
     volumes:
@@ -85,11 +93,8 @@ services:
       - /data/db
       - /data/db-users
   zipkin:
-    image: openzipkin/zipkin 
+    image: docker-registry.default.svc:5000/sock/zipkin 
     tmpfs:
       - /tmp
     ports:
       - "9411:9411"
-  user-sim:
-    image: app/load-test
-    command: "-d 60 -r 200 -c 2 -h edge-router"
